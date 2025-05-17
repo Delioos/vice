@@ -17,6 +17,9 @@ pub enum DMarketError {
     #[error("HMAC error: {0}")]
     HmacError(String),
 
+    #[error("Hex decode error: {0}")]
+    HexError(#[from] hex::FromHexError),
+
     #[error("API error: {0}")]
     ApiError(String),
 } 
