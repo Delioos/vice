@@ -15,7 +15,7 @@ async fn main() {
         Ok(client) => {
             // Get user profile
             info!("Trying user profile endpoint...");
-            match client.get_user_profile().await {
+            match client.account().get_user_profile().await {
                 Ok(profile) => {
                     info!("Successfully retrieved user profile:");
                     info!("User ID: {}", profile.id);
@@ -29,7 +29,7 @@ async fn main() {
             
             // Get account balance
             info!("Retrieving account balance...");
-            match client.get_account_balance().await {
+            match client.account().get_account_balance().await {
                 Ok(balances) => {
                     info!("Successfully retrieved account balance:");
                     for balance in balances {
@@ -43,7 +43,20 @@ async fn main() {
             
             // Get market items (CS2 items)
             info!("Retrieving market items for CS2...");
-            match client.get_market_items("USD", 5, 0, Some("a411")).await {
+            match client.exchange().get_market_items(
+                "a8db", // game_id (CS2)
+                "USD",  // currency
+                5,      // limit
+                0,      // offset
+                Some("title"), // order_by
+                Some("desc"),  // order_dir
+                None,   // title (for filtering by specific title)
+                None,   // tree_filters
+                None,   // price_from
+                None,   // price_to
+                None,   // types
+                None    // cursor
+            ).await {
                 Ok(market_items) => {
                     info!("Successfully retrieved {} market items out of {}", market_items.objects.len(), market_items.total);
                     for item in market_items.objects {
@@ -58,7 +71,7 @@ async fn main() {
             
             // Search market items
             info!("Searching market items for 'AWP'...");
-            match client.search_market_items("AWP", "USD", 5, 0, Some("a411")).await {
+            match client.exchange().search_market_items("AWP", "USD", 5, 0, Some("a8db")).await {
                 Ok(search_results) => {
                     info!("Successfully searched for market items: found {} items", search_results.objects.len());
                     for item in search_results.objects {
@@ -73,7 +86,7 @@ async fn main() {
             
             // Get available games
             info!("Retrieving available games...");
-            match client.get_games().await {
+            match client.exchange().get_games().await {
                 Ok(games) => {
                     info!("Successfully retrieved {} games", games.len());
                     for game in games {
@@ -88,7 +101,8 @@ async fn main() {
             
             // Get inventory
             info!("Retrieving inventory...");
-            match client.get_inventory(10, 0, Some("a411")).await {
+            let cs2_id_dmarket =  "a8db";
+            match client.inventory().get_inventory(10, 0, Some(cs2_id_dmarket)).await {
                 Ok(inventory) => {
                     info!("Successfully retrieved {} inventory items out of {}", inventory.objects.len(), inventory.total);
                     for item in inventory.objects {

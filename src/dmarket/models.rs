@@ -165,7 +165,7 @@ pub struct ApiError {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MarketItemsResponse {
     pub objects: Vec<MarketItem>,
-    pub total: i32,
+    pub total: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
