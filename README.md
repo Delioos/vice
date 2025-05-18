@@ -2,7 +2,7 @@ counter strike third party sites price aggregator
 
 # todo 
 - [ ] https://tradeit.gg/
-- [ ] https://dmarket.com/
+- [x] https://dmarket.com/
 - [ ] https://skinport.com/
 - [ ] https://lis-skins.com/
 - [ ] https://avan.market/
