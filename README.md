@@ -1,9 +1,17 @@
 counter strike third party sites price aggregator
 
 # todo 
-- [ ] https://tradeit.gg/
 - [x] https://dmarket.com/
+- [x] https://csfloat.com/
+- [ ] https://cs.money/
+- [ ] https://skinbid.com/
+- [ ] https://buff.market/
+- [ ] https://tradeit.gg/
 - [ ] https://skinport.com/
+- [ ] https://skinsmonkey.com/
+- [ ] https://pirateswap.com/
+- [ ] https://cs.deals/
+
 - [ ] https://lis-skins.com/
 - [ ] https://avan.market/
 - [ ] https://skinflow.gg/
@@ -21,7 +29,6 @@ counter strike third party sites price aggregator
 - [ ] https://waxpeer.com/
 - [ ] https://bitskins.com/
 - [ ] https://shadowpay.com/
-- [ ] https://cs.deals/
 - [ ] https://skins.cash/
 - [ ] https://csmiddler.com/
 - [ ] https://skinomat.com/
@@ -30,13 +37,8 @@ counter strike third party sites price aggregator
 - [ ] https://csgopaka.com/
 - [ ] https://sellpixels.gg/
 - [ ] https://skinthunder.com/
-- [ ] https://csfloat.com/
-- [ ] https://buff.market/
-- [ ] https://cs.money/
-- [ ] https://skinsmonkey.com/
 - [ ] https://market.csgo.com/
 - [ ] https://skinbaron.de/
-- [ ] https://skinbid.com/
 - [ ] https://skin.land/
 - [ ] https://buff.163.com/
 - [ ] https://lootbear.com/
@@ -44,7 +46,6 @@ counter strike third party sites price aggregator
 - [ ] https://csmarket.gg/
 - [ ] https://skinout.gg/
 - [ ] https://loot.farm/
-- [ ] https://pirateswap.com/
 - [ ] https://skinwallet.com/
 - [ ] https://haloskins.com/
 - [ ] https://skinfury.com/

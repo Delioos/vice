@@ -1,5 +1,7 @@
 use log::{error, info, debug};
-use crate::dmarket::client::DMarketClient;
+use backend::BuffMarketClient;
+use backend::CSFloatClient;
+use backend::DMarketClient;
 
 mod dmarket;
 
@@ -118,5 +120,78 @@ async fn main() {
         Err(e) => {
             error!("Failed to initialize DMarket client: {}", e);
         }
+    }
+
+    // Example for Csfloat (assuming it exists and works)
+    // let csfloat_client = CsfloatClient::new();
+    // match csfloat_client.get_listings("AK-47 | Redline (Field-Tested)", None, None).await {
+    //     Ok(listings) => println!("Csfloat listings: {:?}", listings.len()),
+    //     Err(e) => eprintln!("Error fetching Csfloat listings: {:?}", e),
+    // }
+    
+    // Example for BuffMarket (New endpoint: /api/market/goods)
+    let buff_session_cookie = "your_buff_session_cookie_here".to_string(); 
+    let buff_csrf_token = "your_buff_csrf_token_here".to_string(); // Get this from your browser dev tools
+    let buff_game_name = "csgo";
+    let items_per_page = 20; // How many items to fetch per API call in get_all_market_listings
+
+    if buff_session_cookie == "your_buff_session_cookie_here" || buff_csrf_token == "your_buff_csrf_token_here" {
+        eprintln!("Please update main.rs with your buff.market session cookie AND CSRF token to test BuffMarketClient new endpoint.");
+    } else {
+        let buff_client = BuffMarketClient::new(buff_session_cookie.clone(), buff_csrf_token.clone());
+        println!("Testing BuffMarket API (all market listings) for game: {}", buff_game_name);
+
+        match buff_client.get_all_market_listings(buff_game_name, items_per_page).await {
+            Ok(all_items) => {
+                println!("Successfully fetched all market listings from BuffMarket.");
+                println!("Total items found: {}", all_items.len());
+                for item in all_items.iter().take(10) { // Print first 10 items as a sample
+                    println!(
+                        "  Item: {} (ID: {}), Price: {}, Sell Count: {:?}",
+                        item.market_hash_name,
+                        item.goods_internal_id,
+                        item.sell_min_price,
+                        item.sell_num
+                    );
+                    if let Some(info) = &item.info {
+                        if let Some(tags) = &info.tags {
+                            if let Some(ext) = &tags.exterior {
+                                println!("    Exterior: {}", ext.localized_name);
+                            }
+                            if let Some(qual) = &tags.quality {
+                                println!("    Quality: {}", qual.localized_name);
+                            }
+                        }
+                    }
+                }
+                if all_items.len() > 10 {
+                    println!("... and {} more items.", all_items.len() - 10);
+                }
+            }
+            Err(e) => {
+                eprintln!("Error fetching all BuffMarket market listings: {:?}", e);
+            }
+        }
+
+        // Example of fetching a single page (optional, can be commented out)
+        // println!("\nTesting BuffMarket API (single page of market listings) for game: {}", buff_game_name);
+        // match buff_client.get_market_listings(buff_game_name, 1, 5).await { // page 1, 5 items
+        //     Ok(response) => {
+        //         println!("Successfully fetched single page from BuffMarket.");
+        //         if let Some(data) = response.data {
+        //             println!("Page: {}/{}, Total items on page: {}, Total Count: {}", 
+        //                 data.page_num, data.total_page, data.items.len(), data.total_count);
+        //             for item in data.items.iter().take(5) {
+        //                 println!("  Item: {} Price: {}", item.market_hash_name, item.sell_min_price);
+        //             }
+        //         } else {
+        //             println!("Response OK, but no data field in BuffMarket response (single page).");
+        //         }
+        //     }
+        //     Err(e) => {
+        //         eprintln!("Error fetching single page of BuffMarket listings: {:?}", e);
+        //     }
+        // }
+
     }
 }
