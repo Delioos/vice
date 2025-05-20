@@ -13,4 +13,10 @@ pub enum CSFloatError {
 
     #[error("JSON serialization error: {0}")]
     SerializationError(#[from] serde_json::Error),
+    
+    #[error("Invalid header value: {0}")]
+    InvalidHeaderValue(#[from] reqwest::header::InvalidHeaderValue),
+    
+    #[error("URL encoding error: {0}")]
+    UrlEncodingError(#[from] serde_urlencoded::ser::Error),
 } 

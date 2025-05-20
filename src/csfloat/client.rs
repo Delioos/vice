@@ -56,21 +56,37 @@ impl CSFloatClient {
         endpoint: &str,
     ) -> Result<T, CSFloatError> {
         let url = format!("{}{}", API_BASE_URL, endpoint);
+        debug!("GET request to URL: {}", url);
+        
         let response = self.http_client
             .get(&url)
             .headers(self.create_headers()?)
             .send()
             .await?;
 
-        if !response.status().is_success() {
+        let status = response.status();
+        debug!("Response status: {}", status);
+        
+        if !status.is_success() {
+            let error_text = response.text().await?;
+            debug!("Error response: {}", error_text);
             return Err(CSFloatError::ApiError(format!(
                 "API request failed with status {}: {}",
-                response.status(),
-                response.text().await?
+                status, error_text
             )));
         }
 
-        Ok(response.json().await?)
+        // Debug the response body before trying to deserialize it
+        let text = response.text().await?;
+        debug!("Response body: {}", text);
+        
+        match serde_json::from_str::<T>(&text) {
+            Ok(parsed) => Ok(parsed),
+            Err(e) => {
+                debug!("Failed to deserialize response: {}", e);
+                Err(CSFloatError::SerializationError(e))
+            }
+        }
     }
 
     /// Makes a POST request to the CSFloat API.
@@ -80,6 +96,7 @@ impl CSFloatClient {
         body: &B,
     ) -> Result<T, CSFloatError> {
         let url = format!("{}{}", API_BASE_URL, endpoint);
+        
         let response = self.http_client
             .post(&url)
             .headers(self.create_headers()?)
@@ -87,15 +104,28 @@ impl CSFloatClient {
             .send()
             .await?;
 
-        if !response.status().is_success() {
+        let status = response.status();
+        
+        if !status.is_success() {
+            let error_text = response.text().await?;
             return Err(CSFloatError::ApiError(format!(
                 "API request failed with status {}: {}",
-                response.status(),
-                response.text().await?
+                status,
+                error_text
             )));
         }
 
-        Ok(response.json().await?)
+        // Debug the response body before trying to deserialize it
+        let text = response.text().await?;
+        debug!("Response body: {}", text);
+        
+        match serde_json::from_str::<T>(&text) {
+            Ok(parsed) => Ok(parsed),
+            Err(e) => {
+                debug!("Failed to deserialize response: {}", e);
+                Err(CSFloatError::SerializationError(e))
+            }
+        }
     }
 
     /// Provides access to listings-related API endpoints.
